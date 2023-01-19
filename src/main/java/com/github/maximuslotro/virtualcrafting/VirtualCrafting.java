@@ -32,6 +32,10 @@ public class VirtualCrafting
     	LOGGER.info("Registering Craft Command");
     	CommandDispatcher<CommandSource> dispatcher = event.getDispatcher();
 		
+    	CommandCraft command = new CommandCraft("craft", 0, true);
+    	if (command.isEnabled() && command.setExecution() != null) {
+			dispatcher.register(command.getBuilder());
+		}
     }
 
 }
