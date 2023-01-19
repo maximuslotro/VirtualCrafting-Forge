@@ -31,8 +31,8 @@ public class CommandCraft  extends BaseCommand
     	if (context.getSource().getEntity() instanceof PlayerEntity) {
     		ServerPlayerEntity player = (ServerPlayerEntity)context.getSource().getEntity();
 
-    		context.getSource().sendSuccess(new StringTextComponent("Opening Crafting table"), false);
-
+    		player.sendMessage(new StringTextComponent("Opening Crafting table"), player.getUUID());
+    		
     		CraftingTableBlock craftingTableBlock = new CraftingTableBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD));
     		player.openMenu(craftingTableBlock.getMenuProvider(craftingTableBlock.defaultBlockState(), player.getCommandSenderWorld(), player.blockPosition()));
             return Command.SINGLE_SUCCESS;
