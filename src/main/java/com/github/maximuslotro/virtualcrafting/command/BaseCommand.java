@@ -1,4 +1,4 @@
-package com.github.maximuslotro.virtualcrafting;
+package com.github.maximuslotro.virtualcrafting.command;
 
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 

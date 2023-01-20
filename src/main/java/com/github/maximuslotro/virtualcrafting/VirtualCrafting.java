@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber.Bus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.github.maximuslotro.virtualcrafting.command.CommandCraft;
 import com.mojang.brigadier.CommandDispatcher;
 
 @Mod(VirtualCrafting.MODID)
