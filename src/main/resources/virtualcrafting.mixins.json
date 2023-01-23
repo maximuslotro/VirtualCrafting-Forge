@@ -6,9 +6,6 @@
   "mixins": [
   "VirtualCraftingMixin"
   ],
-  "server":[
-    "VirtualCraftingMixin"
-  ],
   "injectors": {
     "defaultRequire": 1
   },

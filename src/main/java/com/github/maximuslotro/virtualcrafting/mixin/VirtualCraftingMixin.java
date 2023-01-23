@@ -1,21 +1,30 @@
 package com.github.maximuslotro.virtualcrafting.mixin;
 
-import net.minecraft.server.Main;
 
-import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Main.class)
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
+
+@Mixin(ItemEntity.class)
 public class VirtualCraftingMixin {
-	@Shadow
-    private static Logger LOGGER;
-	
-	@Inject(at = @At("HEAD"), method = "loadLevel()V", remap = false)
-	private void loadLevel(CallbackInfo info) {
-		LOGGER.info("This line is printed by an example mod mixin!");
+	@Inject(at = @At("HEAD"), method = "hurt(Lnet/minecraft/util/DamageSource;F)Z", cancellable = true)
+	private void hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> callback) {
+	  if (source.isFire() && EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FIRE_PROTECTION, this.getItem()) > 0) {
+	    callback.setReturnValue(false);
+	  }
 	}
+
+	@Shadow
+	public ItemStack getItem() {
+	  throw new IllegalStateException("Mixin failed to shadow getItem()");
+	}
+
 }
