@@ -1,16 +1,10 @@
 package com.github.maximuslotro.virtualcrafting.command;
 
-import com.github.maximuslotro.virtualcrafting.VirtualCrafting;
 import com.github.maximuslotro.virtualcrafting.VirtualCraftingMenu;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CraftingTableBlock;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -42,11 +36,9 @@ public class CommandCraft extends BaseCommand
     		ServerPlayerEntity player = (ServerPlayerEntity)context.getSource().getEntity();
 
     		player.sendMessage(new StringTextComponent("Opening Crafting table"), player.getUUID());
-    		VirtualCrafting.instance.AddCraftingPlayer(player);
+
     		//player.openMenu(craftingTableBlock.getMenuProvider(craftingTableBlock.defaultBlockState(), player.getCommandSenderWorld(), player.blockPosition()));
-    		//CraftingTableBlock craftingTableBlock = new CraftingTableBlock(AbstractBlock.Properties.of(Material.WOOD).strength(2.5F).sound(SoundType.WOOD));;
-    		//player.openMenu(craftingTableBlock.getMenuProvider(craftingTableBlock.defaultBlockState(), player.getCommandSenderWorld(), player.blockPosition()));
-    		//player.openMenu(getMenuProvider(player.level,player.blockPosition()));
+    		player.openMenu(getMenuProvider(player.level,player.blockPosition()));
             return Command.SINGLE_SUCCESS;
     	}
     	else {
