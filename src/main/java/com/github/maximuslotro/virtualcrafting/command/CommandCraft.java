@@ -1,24 +1,22 @@
 package com.github.maximuslotro.virtualcrafting.command;
 
-import com.github.maximuslotro.virtualcrafting.VirtualCraftingMenu;
 import com.mojang.brigadier.Command;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.inventory.container.SimpleNamedContainerProvider;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.inventory.container.WorkbenchContainer;
+import net.minecraft.util.IWorldPosCallable;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
 
 public class CommandCraft extends BaseCommand 
 {
-	private static final ITextComponent CONTAINER_TITLE = new TranslationTextComponent("container.crafting");
+	private static final ITextComponent CONTAINER_TITLE = new StringTextComponent("Crafting Gui");
 
     public CommandCraft(String name, int permissionLevel, boolean enabled) {
 		super(name, permissionLevel, enabled);
@@ -32,13 +30,17 @@ public class CommandCraft extends BaseCommand
 	}
     
 	public int execute(CommandContext<CommandSource> context) {
-    	if (context.getSource().getEntity() instanceof PlayerEntity) {
+    	if (context.getSource().getEntity() instanceof ServerPlayerEntity) {
     		ServerPlayerEntity player = (ServerPlayerEntity)context.getSource().getEntity();
-
-    		player.sendMessage(new StringTextComponent("Opening Crafting table"), player.getUUID());
-
-    		//player.openMenu(craftingTableBlock.getMenuProvider(craftingTableBlock.defaultBlockState(), player.getCommandSenderWorld(), player.blockPosition()));
-    		player.openMenu(getMenuProvider(player.level,player.blockPosition()));
+			player.sendMessage(new StringTextComponent("Opening Crafting table"), player.getUUID());
+			player.openMenu(new SimpleNamedContainerProvider((i, playerInventory, playerEntity) ->
+			        new WorkbenchContainer(i, playerInventory, IWorldPosCallable.create(player.getCommandSenderWorld(), player.blockPosition())) {
+			            @Override
+			        	public boolean stillValid(PlayerEntity player) {
+			                return true;
+			            }
+			        }, CONTAINER_TITLE));
+    		player.sendMessage(new StringTextComponent("Crafting opened"), player.getUUID());
             return Command.SINGLE_SUCCESS;
     	}
     	else {
@@ -47,9 +49,4 @@ public class CommandCraft extends BaseCommand
     	return Command.SINGLE_SUCCESS;
     }
 
-	public INamedContainerProvider getMenuProvider(World p_52241_, BlockPos p_52242_) {
-	      return new SimpleNamedContainerProvider((p_52229_, p_52230_, p_52231_) -> {
-	         return new VirtualCraftingMenu(p_52229_, p_52230_);
-	      }, CONTAINER_TITLE);
-	   }
 }
